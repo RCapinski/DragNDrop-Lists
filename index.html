@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>BRAG Test App</title>
+    <link rel="stylesheet" type="text/css" href="./css/reset.css">
+    <link rel="stylesheet" href="js/lib/angular-ui-tree/dist/angular-ui-tree.min.css">
+    <link rel="stylesheet" type="text/css" href="./css/style.css">
+  </head>
+  <body ng-app="myapp" ng-controller="getJsonCtrl">
+    <header class="header">
+      <h1 class="header__text" translate>{{ 'title' }}</h1>
+      <div class="header__lang-wrapper" ng-controller="langChangeCtrl">
+        <img src="http://pieknetapety.pl/img/products/15/95/1/1_max.jpg" alt="en" height="15" width="25" class="header__lang-flag" ng-click="changeLanguage('en')" translate="langEng">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Flag_of_Poland_%28normative%29.svg/250px-Flag_of_Poland_%28normative%29.svg.png" alt="pl" height="15" width="25" class="header__lang-flag" ng-click="changeLanguage('pl')" translate="langPl">
+      </div>
+    </header>
+    <main class="list__wrapper" ng-controller="checkTree">
+      <section class="list__wrapper-left" ui-tree="treeOptions" max-depth="7">
+          <h2 class="list__header" translate>{{ 'leftName' }}</h2>
+          <ul ui-tree-nodes ng-model="models.lists.A">
+            <li class="list__element-left" ng-repeat="x in models.lists.A" ui-tree-node ng-include="'nodes_renderer'"> 
+            </li>
+          </ul>
+      </section>
+      <section class="list__wrapper-right" ui-tree="treeOptions" data-clone-enabled="true">
+        <h2 class="list__header" translate>{{ 'rightName' }}</h2>
+          <ul ui-tree-nodes ng-model="models.lists.B" data-nodrop-enabled>
+            <li class="list__element-left" ng-repeat="x in models.lists.B" ui-tree-node>
+              <div ui-tree-handle>
+                <button class="list__del-button" data-nodrag="" ng-click="remove(this)">Del</button>
+                <div class="list__element-constant-text">Code: {{ x.code }}</div>
+                <div class="list__element-constant-text">Name: <span class="list__element-field" data-nodrag="" contenteditable ng-model="x.name"> {{ x.name }}</span></div>
+                <div class="list__element-constant-text">Description: <span class="list__element-field" data-nodrag="" contenteditable ng-model="x.description"> {{ x.description }}</span></div>
+                <div class="list__element-constant-text">Date:<span class="list__element-field" data-nodrag="" contenteditable ng-model="x.date"> {{ x.date }}</span></div>
+              </div>
+            </li>
+          </ul>
+      </section>
+    </main>
+    <footer class="footer">
+      <h3 class="footer__text">Rafał Capiński, 2017</h3>
+    </footer>
+
+    <script type="text/ng-template" id="nodes_renderer">
+      <div ui-tree-handle>
+          <button class="list__del-button" data-nodrag="" ng-click="remove(this)">Del</button>
+          <div class="list__element-constant-text">Code: {{ x.code }}</div>
+          <div class="list__element-constant-text">Name: <span class="list__element-field" data-nodrag="" contenteditable ng-model="x.name"> {{ x.name }}</span></div>
+          <div class="list__element-constant-text">Description: <span class="list__element-field" data-nodrag="" contenteditable ng-model="x.description"> {{ x.description }}</span></div>
+          <div class="list__element-constant-text">Date:<span class="list__element-field" data-nodrag="" contenteditable ng-model="x.date"> {{ x.date }}</span></div>
+        </div>
+      <ol ui-tree-nodes="" ng-model="x.nodes">
+        <li ng-repeat="x in x.nodes" ui-tree-node ng-include="'nodes_renderer'">
+        </li>
+      </ol>
+    </script>
+    <script src="js/lib/angular.min.js"></script>
+    <script src="js/lib/angular-ui-tree/dist/angular-ui-tree.js"></script>
+    <script src="js/lib/angular-translate/dist/angular-translate.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
