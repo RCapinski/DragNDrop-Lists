@@ -22,19 +22,21 @@ var myApp = angular.module('myapp', ['ui.tree', 'pascalprecht.translate']);
         $http.get('MOCK_DATA.json').then(function(info){
             $scope.info = info.data;
             $scope.models = {
-                selected: null,
                 lists: {"A": [], "B": []}
             };
 
             var objectsArray = $scope.info;
             var codeLetterRE = /[a-m]\b/;
 
-            for(var i = 0; i < $scope.info.length; i++) {
-                if (codeLetterRE.test(objectsArray[i].code[0])) {
-                    $scope.models.lists.A.push(objectsArray[i]);  
-                } else {
-                    $scope.models.lists.B.push(objectsArray[i]);
-                }
+            for(var i = 0; i < objectsArray.length; i++) {
+                if(objectsArray[i]){
+                    if (codeLetterRE.test(objectsArray[i].code[0])) {
+                        $scope.models.lists.A.push(objectsArray[i]);  
+                    } else {
+                        $scope.models.lists.B.push(objectsArray[i]);
+                }} else {
+                    alert('wrong JSON file formatting');
+                };
             };
         
         }, function(error) {
@@ -43,7 +45,6 @@ var myApp = angular.module('myapp', ['ui.tree', 'pascalprecht.translate']);
     });
 
     app.controller("langChangeCtrl", function($translate, $scope){
-        $scope.checkValue = 1;
         $scope.changeLanguage = function (langKey) {
             $translate.use(langKey); 
         }
