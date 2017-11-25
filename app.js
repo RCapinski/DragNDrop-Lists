@@ -1,3 +1,5 @@
+var _ = require('lodash');
+
 var translationsEng = {
     title: 'Lists App',
     leftName: 'Left list',
@@ -12,7 +14,7 @@ var translationsPl = {
     langEng: 'en',
     langPl: 'pl'
 };
-
+//xd
 
 var myApp = angular.module('myapp', ['ui.tree', 'pascalprecht.translate']);
 
@@ -20,20 +22,23 @@ var myApp = angular.module('myapp', ['ui.tree', 'pascalprecht.translate']);
     "use strict";
     app.controller("getJsonCtrl", function($translate, $scope, $http){
         $http.get('MOCK_DATA.json').then(function(info){
-            $scope.info = info.data;
+            var objectsArray = info.data;
             $scope.models = {
                 lists: {"A": [], "B": []}
             };
 
-            var objectsArray = $scope.info;
             var codeLetterRE = /[a-m]\b/;
+
+            function modelPush (destinationList) {
+                _.get($scope.models.lists, destinationList).push(objectsArray[i]);
+                }
 
             for(var i = 0; i < objectsArray.length; i++) {
                 if(objectsArray[i]){
                     if (codeLetterRE.test(objectsArray[i].code[0])) {
-                        $scope.models.lists.A.push(objectsArray[i]);  
+                        modelPush('A');  
                     } else {
-                        $scope.models.lists.B.push(objectsArray[i]);
+                        modelPush('B');
                 }} else {
                     alert('wrong JSON file formatting');
                 };
