@@ -1,6 +1,6 @@
 /.git
 package-lock.json
-/node_modules
 package.json
-/scss
+/node_modules
 js/app.js
+/css
