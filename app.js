@@ -14,7 +14,6 @@ var translationsPl = {
     langEng: 'en',
     langPl: 'pl'
 };
-//xd
 
 var myApp = angular.module('myapp', ['ui.tree', 'pascalprecht.translate']);
 
@@ -31,55 +30,69 @@ var myApp = angular.module('myapp', ['ui.tree', 'pascalprecht.translate']);
 
             function modelPush (destinationList) {
                 _.get($scope.models.lists, destinationList).push(objectsArray[i]);
-                }
+            }
 
             for(var i = 0; i < objectsArray.length; i++) {
                 if(objectsArray[i]){
                     if (codeLetterRE.test(objectsArray[i].code[0])) {
-                        modelPush('A');  
+                        modelPush('A');
                     } else {
                         modelPush('B');
-                }} else {
+                    }
+                } else {
                     alert('wrong JSON file formatting');
-                };
-            };
-        
+                }
+            }
         }, function(error) {
             alert('No JSON file loaded.');
-        });        
+        });
     });
 
     app.controller("langChangeCtrl", function($translate, $scope){
         $scope.changeLanguage = function (langKey) {
-            $translate.use(langKey); 
+            $translate.use(langKey);
         }
     });
 
     app.controller('checkTree', function($scope) {
         $scope.treeOptions = {
             beforeDrop: function(element) {
-                var destParent = element.dest.nodesScope; 
-                var result = true; 
-                function parentChecker() {
-                        destParent = destParent.$parent;
-                        if ((element.source.cloneModel && destParent.$modelValue) && element.source.cloneModel.code === destParent.$modelValue.code){
-                        console.log('noDrop')
-                            result = false;
-                            return result;
-                    }else{
-                        console.log(destParent);
-                        if(!destParent.$modelValue){  
-                            console.log() 
-                            result = true;
-                            return result;    
+                var destParent = element.dest.nodesScope;
+                var result = true;
+
+                function siblingChecker() {
+                    if(element.source.cloneModel && destParent.$$childTail.$modelValue){
+                        for(var i = 0; i < destParent.$$childTail.$modelValue.length; i++) {
+                            if (destParent.$$childTail.$modelValue[i] && element.source.cloneModel.code === destParent.$$childTail.$modelValue[i].code) {
+                                result = false;
+                                return result;
+                            }
                         }
+                    }
+                }
+
+                function parentChecker() {
+
+                    destParent = destParent.$parent;
+                    if (siblingChecker() === false){
+                        return false;
+                    }
+                    if ((element.source.cloneModel && destParent.$modelValue) && element.source.cloneModel.code === destParent.$modelValue.code){
+                        result = false;
+                        return result;
+                    }else{
+                        if(!destParent.$modelValue){
+                            result = true;
+                            return result;
+                        }
+
                         parentChecker();
                         return result;
-                    }};
+                    }
+                }
                 return parentChecker();
-            }         
+            }
     }});
-    
 })(myApp);
 
 myApp.config(['$translateProvider', function ($translateProvider) {
@@ -98,12 +111,12 @@ myApp.directive("contenteditable", function() {
             }
         ngModel.$render = function() {
             element.html(ngModel.$viewValue || "");
-        };
+        }
         element.bind("blur keyup change", function() {
             scope.$apply(read);
         });
       }
-    };
+    }
 });
 
 
